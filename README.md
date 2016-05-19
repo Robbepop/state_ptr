@@ -7,7 +7,7 @@ For example for arrays of element type `uint64_t` the three least significant bi
 This class provides a convenient way to use this otherwise wasted space to store information.
 
 ```c++
-std::array<int64_t, 5> arr{124, -97, 5, 77};
+std::array<int64_t, 4> arr{124, -97, 5, 77};
 putl::state_ptr<int64_t> p{&arr[0], 0};
 static_assert(putl::state_ptr<int64_t>::state_bits == 3, "");
 static_assert(putl::state_ptr<int64_t>::ptr_bits == 61, ""); // on 64-bit system
