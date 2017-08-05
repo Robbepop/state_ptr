@@ -5,8 +5,13 @@
 #include <type_traits>
 #include <memory>
 
-/// putl := Pointer Utils
-namespace putl {
+// Users can change the namespace of `state_ptr`.
+// The default namespace is `putl` which stands for "Pointer Utils".
+#ifndef UTILS_STATE_PTR_HPP_NAMESPACE
+#define UTILS_STATE_PTR_HPP_NAMESPACE putl
+#endif
+
+namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	namespace detail {
 		constexpr auto log2_(uint64_t number, uint64_t acc) -> uint64_t {
 			return number <= 1 ? acc : log2_(number / 2, acc + 1);
