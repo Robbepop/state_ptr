@@ -43,72 +43,72 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 		static_assert(sizeof(pointer_type) == sizeof(uintptr_t), "");
 
-		constexpr static size_t state_bits = detail::log2(sizeof(T));
+		constexpr static size_t state_bits = detail::log2(alignof(T));
 		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
 		constexpr static size_t threshold  = (1 << state_bits) - 1;
 
 		state_ptr(
 			pointer_type ptr,
 			state_type   state = 0u
-		):
+		) noexcept :
 			m_ptr{reinterpret_cast<uintptr_t>(ptr) >> state_bits},
 			m_state{state}
 		{
 			check_invariant();
 		}
 
-		void check_invariant() {
+		void check_invariant() const noexcept {
 			assert(m_state <= threshold);
 		}
 
-		void set_state(uintptr_t new_state) {
+		void set_state(uintptr_t new_state) noexcept {
 			assert(new_state <= threshold);
 			m_state = new_state;
 			check_invariant();
 		}
 
-		auto get_state() -> uintptr_t {
+		auto get_state() const noexcept -> uintptr_t {
 			return m_state;
 		}
 
-		auto get_ptr() -> pointer_type {
+		auto get_ptr() noexcept -> pointer_type {
 			uintptr_t c = m_ptr;
 			return reinterpret_cast<pointer_type>(c << state_bits);
 		}
 
-		auto get_ptr() const -> const pointer_type {
+		auto get_ptr() const noexcept -> const pointer_type {
 			uintptr_t c = m_ptr;
 			return reinterpret_cast<pointer_type>(c << state_bits);
 		}
 
-		void operator++() {
+		void operator++() noexcept {
 			++m_ptr;
 		}
 
-		void operator++(int) {
+		void operator++(int) noexcept {
 			++m_ptr;
 		}
 
-		void operator--() {
+		void operator--() noexcept {
 			--m_ptr;
 		}
 
-		void operator--(int) {
+		void operator--(int) noexcept {
 			--m_ptr;
 		}
 
-		auto operator*() const -> reference_type {
+		auto operator*() const noexcept -> reference_type {
 			return *reinterpret_cast<pointer_type>(get_ptr());
 		}
 
-		auto operator->() const -> pointer_type {
+		auto operator->() const noexcept -> pointer_type {
 			return reinterpret_cast<pointer_type>(get_ptr());
 		}
 
-		template<typename X> friend bool operator==(state_ptr<X> const& lhs, state_ptr<X> const& rhs);
-		template<typename X> friend bool operator!=(state_ptr<X> const& lhs, state_ptr<X> const& rhs);
+		template<typename X> friend bool operator==(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
+		template<typename X> friend bool operator!=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
-		template<typename X> friend bool operator<(state_ptr<X> const& lhs, state_ptr<X> const& rhs);
+		template<typename X> friend bool operator<(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 
 	private:
@@ -117,17 +117,17 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	};
 
 	template<typename T>
-	auto operator==(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
+	auto operator==(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return lhs.m_ptr == rhs.m_ptr;
 	}
 
 	template<typename T>
-	auto operator!=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
+	auto operator!=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs == rhs);
 	}
 
 	template<typename T>
-	auto operator<(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
+	auto operator<(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs.m_ptr < rhs.m_ptr);
 	}
 
