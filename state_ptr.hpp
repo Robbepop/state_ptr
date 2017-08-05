@@ -38,7 +38,7 @@ namespace putl {
 
 		static_assert(sizeof(pointer_type) == sizeof(uintptr_t), "");
 
-		constexpr static size_t state_bits = detail::log2(sizeof(T));
+		constexpr static size_t state_bits = detail::log2(alignof(T));
 		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
 		constexpr static size_t threshold  = (1 << state_bits) - 1;
 
