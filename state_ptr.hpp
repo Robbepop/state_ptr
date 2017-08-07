@@ -82,6 +82,10 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 			return reinterpret_cast<pointer_type>(get_ptr());
 		}
 
+		explicit operator bool() const noexcept {
+			return get_ptr() != nullptr;
+		}
+
 		template<typename X> friend bool operator==(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 		template<typename X> friend bool operator!=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
