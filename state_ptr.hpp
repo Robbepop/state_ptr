@@ -37,10 +37,12 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 		constexpr static size_t state_bits = detail::log2(alignof(T));
 		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
-		constexpr static size_t threshold  = (1 << state_bits) - 1;
+		constexpr static size_t threshold  = (1u << state_bits) - 1u;
+
+		constexpr static bool is_valid_state(state_type) noexcept;
 
 		state_ptr(std::nullptr_t, state_type) noexcept;
-		state_ptr(pointer_type ptr, state_type state) noexcept;
+		state_ptr(pointer_type ptr, state_type) noexcept;
 
 		explicit state_ptr(state_ptr const& p) = default;
 
@@ -67,7 +69,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 	private:
-		void check_invariant() const noexcept;
+		void assert_invariant() const noexcept;
 
 	private:
 		uintptr_t m_ptr   : ptr_bits;
@@ -79,6 +81,11 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	/// =======================================================================
 
 	template<typename T>
+	constexpr bool state_ptr<T>::is_valid_state(state_type state) noexcept {
+		return state <= threshold;
+	}
+
+	template<typename T>
 	state_ptr<T>::state_ptr(
 		std::nullptr_t,
 		state_type state
@@ -86,7 +93,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		m_ptr{0u},
 		m_state{state}
 	{
-		check_invariant();
+		assert_invariant();
 	}
 
 	template<typename T>
@@ -97,19 +104,19 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		m_ptr{reinterpret_cast<uintptr_t>(ptr) >> state_bits},
 		m_state{state}
 	{
-		check_invariant();
+		assert_invariant();
 	}
 
 	template<typename T>
-	void state_ptr<T>::check_invariant() const noexcept {
-		assert(m_state <= threshold);
+	void state_ptr<T>::assert_invariant() const noexcept {
+		assert(is_valid_state(m_state));
 	}
 
 	template<typename T>
 	void state_ptr<T>::set_state(uintptr_t new_state) noexcept {
 		assert(new_state <= threshold);
 		m_state = new_state;
-		check_invariant();
+		assert_invariant();
 	}
 
 	template<typename T>
