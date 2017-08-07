@@ -7,18 +7,39 @@ For example for arrays of element type `uint64_t` the three least significant bi
 This class provides a convenient way to use this otherwise wasted space to store information.
 
 ```c++
-std::array<int64_t, 4> arr{124, -97, 5, 77};
-putl::state_ptr<int64_t> p{&arr[0], 0};
-static_assert(putl::state_ptr<int64_t>::state_bits == 3, "");
-static_assert(putl::state_ptr<int64_t>::ptr_bits == 61, ""); // on 64-bit system
-static_assert(putl::state_ptr<int64_t>::threshold == 7, ""); // this is the greater number that can be stored in the pointer's state
-std::cout << "*p = " << *p; // prints: "*p = 124"
-p++;
-std::cout << "*p = " << *p; // prints: "*p = -97"
-assert(p.get_state() == 0);
-p.set_state(3); // checked at runtime if the given value is within bounds
-assert(p.get_state() == 3);
-p.set_state(8); // oops! not within bounds ...
+using namespace putl;
+
+struct Foo{ int baz; };
+enum class Bar{ A, B, C };
+
+Foo foo{42};
+state_ptr<Foo, Bar> p{&foo, Bar::A};
+
+// Stats for an exemplary 64-bit architecture
+// ------------------------------------------
+static_assert(state_ptr<Foo, Bar>::ptr_bits   == 61); // 61 bits for the pointer
+static_assert(state_ptr<Foo, Bar>::state_bits == 3 ); // 3 bits for the state
+static_assert(state_ptr<Foo, Bar>::threshold  == 7 ); // this is the greatest number that can be stored in the pointer's state
+
+assert(p.get_state() == Bar::A);
+assert(p.get_ptr()   == std::address_of(foo));
+
+// Set state of `p` to `Bar::B`
+// ----------------------------
+
+p.set_state(Bar::B);
+assert(p.get_state(), Bar::B);
+
+// Use the pointed-to value
+// ------------------------
+
+foo->baz = 5; // sets foo's baz to `5`
+assert(*foo == 5);
+
+// Try setting the state of `p` to a value that is out-of-bounds results in a panic
+// --------------------------------------------------------------------------------
+
+p.set_state(static_cast<Bar>(42)); /* !! panic !! */
 ```
 
-I hope this is useful to you.
+I hope this small pointer utility library is useful to you.
