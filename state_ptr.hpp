@@ -26,65 +26,37 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		}
 	}
 
-	template<typename T, class Deleter = std::default_delete<T>>
+	template<typename T>
 	class state_ptr {
 	public:
-		using element_type   = T;
-		using pointer_type   = T*;
-		using reference_type = typename std::add_lvalue_reference<T>::type;
-		using state_type     = uintptr_t;
-
-		static_assert(sizeof(pointer_type) == sizeof(uintptr_t), "");
+		using element_type       = T;
+		using pointer_type       = T*;
+		using const_pointer_type = T const*;
+		using reference_type     = typename std::add_lvalue_reference<T>::type;
+		using state_type         = uintptr_t;
 
 		constexpr static size_t state_bits = detail::log2(alignof(T));
 		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
 		constexpr static size_t threshold  = (1 << state_bits) - 1;
 
-		state_ptr(
-			pointer_type ptr,
-			state_type   state
-		) noexcept :
-			m_ptr{reinterpret_cast<uintptr_t>(ptr) >> state_bits},
-			m_state{state}
-		{
-			check_invariant();
-		}
+		state_ptr(std::nullptr_t, state_type) noexcept;
+		state_ptr(pointer_type ptr, state_type state) noexcept;
 
-		void check_invariant() const noexcept {
-			assert(m_state <= threshold);
-		}
+		explicit state_ptr(state_ptr const& p) = default;
 
-		void set_state(uintptr_t new_state) noexcept {
-			assert(new_state <= threshold);
-			m_state = new_state;
-			check_invariant();
-		}
+		void set_state(uintptr_t new_state) noexcept;
 
-		auto get_state() const noexcept -> uintptr_t {
-			return m_state;
-		}
+		auto get_state() const noexcept -> uintptr_t;
 
-		auto get_ptr() noexcept -> pointer_type {
-			uintptr_t c = m_ptr;
-			return reinterpret_cast<pointer_type>(c << state_bits);
-		}
+		auto get_ptr() noexcept -> pointer_type;
 
-		auto get_ptr() const noexcept -> const pointer_type {
-			uintptr_t c = m_ptr;
-			return reinterpret_cast<pointer_type>(c << state_bits);
-		}
+		auto get_ptr() const noexcept -> const_pointer_type;
 
-		auto operator*() const -> reference_type {
-			return *reinterpret_cast<pointer_type>(get_ptr());
-		}
+		auto operator*() const -> reference_type;
 
-		auto operator->() const noexcept -> pointer_type {
-			return reinterpret_cast<pointer_type>(get_ptr());
-		}
+		auto operator->() const noexcept -> pointer_type;
 
-		explicit operator bool() const noexcept {
-			return get_ptr() != nullptr;
-		}
+		explicit operator bool() const noexcept;
 
 		template<typename X> friend bool operator==(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 		template<typename X> friend bool operator!=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
@@ -95,10 +67,82 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 	private:
+		void check_invariant() const noexcept;
+
+	private:
 		uintptr_t m_ptr   : ptr_bits;
 		uintptr_t m_state : state_bits;
 	};
 
+	/// =======================================================================
+	///  Implementation of constructors and member functions.
+	/// =======================================================================
+
+	template<typename T>
+	state_ptr<T>::state_ptr(
+		std::nullptr_t,
+		state_type state
+	) noexcept :
+		m_ptr{0u},
+		m_state{state}
+	{
+		check_invariant();
+	}
+
+	template<typename T>
+	state_ptr<T>::state_ptr(
+		pointer_type ptr,
+		state_type   state
+	) noexcept :
+		m_ptr{reinterpret_cast<uintptr_t>(ptr) >> state_bits},
+		m_state{state}
+	{
+		check_invariant();
+	}
+
+	template<typename T>
+	void state_ptr<T>::check_invariant() const noexcept {
+		assert(m_state <= threshold);
+	}
+
+	template<typename T>
+	void state_ptr<T>::set_state(uintptr_t new_state) noexcept {
+		assert(new_state <= threshold);
+		m_state = new_state;
+		check_invariant();
+	}
+
+	template<typename T>
+	auto state_ptr<T>::get_state() const noexcept -> uintptr_t {
+		return m_state;
+	}
+
+	template<typename T>
+	auto state_ptr<T>::get_ptr() noexcept -> pointer_type {
+		uintptr_t c = m_ptr;
+		return reinterpret_cast<pointer_type>(c << state_bits);
+	}
+
+	template<typename T>
+	auto state_ptr<T>::get_ptr() const noexcept -> const_pointer_type {
+		uintptr_t c = m_ptr;
+		return reinterpret_cast<pointer_type>(c << state_bits);
+	}
+
+	template<typename T>
+	auto state_ptr<T>::operator*() const -> reference_type {
+		return *reinterpret_cast<pointer_type>(get_ptr());
+	}
+
+	template<typename T>
+	auto state_ptr<T>::operator->() const noexcept -> pointer_type {
+		return reinterpret_cast<pointer_type>(get_ptr());
+	}
+
+	template<typename T>
+	state_ptr<T>::operator bool() const noexcept {
+		return get_ptr() != nullptr;
+	}
 
 	/// =======================================================================
 	///  Implementation of comparison operators.
