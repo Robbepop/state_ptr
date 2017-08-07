@@ -2,7 +2,6 @@
 #define UTILS_STATE_PTR_HPP
 
 #include <cassert>
-#include <type_traits>
 #include <memory>
 
 // Users can change the namespace of `state_ptr`.
