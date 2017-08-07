@@ -86,9 +86,9 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		template<typename X> friend bool operator!=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 		template<typename X> friend bool operator<(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
-		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs);
-		template<typename X> friend bool operator> (state_ptr<X> const& lhs, state_ptr<X> const& rhs);
-		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs);
+		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
+		template<typename X> friend bool operator> (state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
+		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 	private:
 		uintptr_t m_ptr   : ptr_bits;
@@ -120,17 +120,17 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	}
 
 	template<typename T>
-	auto operator<=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
+	auto operator<=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs > rhs);
 	}
 
 	template<typename T>
-	auto operator>=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
+	auto operator>=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs < rhs);
 	}
 
 	template<typename T>
-	auto operator>(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
+	auto operator>(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs <= rhs);
 	}
 }
