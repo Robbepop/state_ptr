@@ -24,21 +24,6 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 			}
 			return acc;
 		}
-
-		/// ===================================================================
-		///  Tests for the constexpr log2 implementation.
-		/// ===================================================================
-
-		static_assert(log2(70) == 6, "");
-		static_assert(log2(64) == 6, "");
-		static_assert(log2(35) == 5, "");
-		static_assert(log2(32) == 5, "");
-		static_assert(log2(17) == 4, "");
-		static_assert(log2(10) == 3, "");
-		static_assert(log2( 4) == 2, "");
-		static_assert(log2( 2) == 1, "");
-		static_assert(log2( 1) == 0, "");
-		static_assert(log2( 0) == 0, ""); // edge case
 	}
 
 	template<typename T, class Deleter = std::default_delete<T>>
@@ -110,6 +95,11 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		uintptr_t m_state : state_bits;
 	};
 
+
+	/// =======================================================================
+	///  Implementation of comparison operators.
+	/// =======================================================================
+
 	template<typename T>
 	auto operator==(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
 		return lhs.m_ptr == rhs.m_ptr;
@@ -119,6 +109,10 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	auto operator!=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
 		return !(lhs == rhs);
 	}
+
+	/// =======================================================================
+	///  Implementation of relational operators.
+	/// =======================================================================
 
 	template<typename T>
 	auto operator<(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
@@ -139,14 +133,17 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	auto operator>(state_ptr<T> const& rhs, state_ptr<T> const& lhs) -> bool {
 		return !(lhs <= rhs);
 	}
+}
 
-	static_assert(sizeof(state_ptr<uint32_t>) == sizeof(uint32_t*), "");
-	static_assert(state_ptr<uint32_t>::state_bits == 2, "");
-	static_assert(state_ptr<uint32_t>::ptr_bits == 8 * sizeof(uint32_t*) - state_ptr<uint32_t>::state_bits, "");
-
-	static_assert(sizeof(state_ptr<uint64_t>) == sizeof(uint64_t*), "");
-	static_assert(state_ptr<uint64_t>::state_bits == 3, "");
-	static_assert(state_ptr<uint64_t>::ptr_bits == 8 * sizeof(uint64_t*) - state_ptr<uint64_t>::state_bits, "");
+namespace std {
+	template<typename T>
+	struct hash<putl::state_ptr<T>> {
+	public:
+	    size_t operator()(const putl::state_ptr<T> &p) const 
+	    {
+	    	return std::hash<uintptr_t>()(p.m_ptr); // TODO
+	    }
+	};
 }
 
 #endif // UTILS_STATE_PTR_HPP
