@@ -135,6 +135,10 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	}
 }
 
+/// ===========================================================================
+///  Implementation of default std::hash template specialization.
+/// ===========================================================================
+
 namespace std {
 	template<typename T>
 	struct hash<putl::state_ptr<T>> {
