@@ -89,22 +89,6 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 			return reinterpret_cast<pointer_type>(c << state_bits);
 		}
 
-		void operator++() {
-			++m_ptr;
-		}
-
-		void operator++(int) {
-			++m_ptr;
-		}
-
-		void operator--() {
-			--m_ptr;
-		}
-
-		void operator--(int) {
-			--m_ptr;
-		}
-
 		auto operator*() const -> reference_type {
 			return *reinterpret_cast<pointer_type>(get_ptr());
 		}
