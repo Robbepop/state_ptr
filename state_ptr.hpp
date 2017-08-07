@@ -113,7 +113,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 	template<typename T>
 	void state_ptr<T>::set_state(uintptr_t new_state) noexcept {
-		assert(new_state <= threshold);
+		assert(is_valid_state(new_state));
 		m_state = new_state;
 		assert_invariant();
 	}
