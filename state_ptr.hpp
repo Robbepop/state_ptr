@@ -40,7 +40,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 		constexpr static bool is_valid_state(state_type) noexcept;
 
-		state_ptr(std::nullptr_t, state_type) noexcept;
+		constexpr state_ptr(std::nullptr_t, state_type) noexcept;
 		state_ptr(pointer_type ptr, state_type) noexcept;
 
 		explicit state_ptr(state_ptr const& p) = default;
@@ -85,7 +85,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	}
 
 	template<typename T>
-	state_ptr<T>::state_ptr(
+	constexpr state_ptr<T>::state_ptr(
 		std::nullptr_t,
 		state_type state
 	) noexcept :
