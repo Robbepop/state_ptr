@@ -13,12 +13,13 @@
 
 namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	namespace detail {
-		constexpr auto log2_(uint64_t number, uint64_t acc) -> uint64_t {
-			return number <= 1 ? acc : log2_(number / 2, acc + 1);
-		}
-
 		constexpr auto log2(uint64_t number) -> uint64_t {
-			return log2_(number, 1u) - 1;
+			uint64_t acc{0};
+			while (number > 1) {
+				number /= 2;
+				acc += 1;
+			}
+			return acc;
 		}
 
 		static_assert(log2(70) == 6, "");
