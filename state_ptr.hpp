@@ -42,7 +42,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 		state_ptr(
 			pointer_type ptr,
-			state_type   state = 0u
+			state_type   state
 		) noexcept :
 			m_ptr{reinterpret_cast<uintptr_t>(ptr) >> state_bits},
 			m_state{state}
