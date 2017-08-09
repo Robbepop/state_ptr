@@ -1,4 +1,4 @@
-add_executable(unit_tests OBJECT
+add_executable(unit_tests
   unit_tests.cpp
 )
 
@@ -10,6 +10,7 @@ target_include_directories(unit_tests
 
 target_include_directories(unit_tests
 	PRIVATE
+		${PROJECT_SOURCE_DIR}/include
 		${PROJECT_SOURCE_DIR}/testsrc
 		${PROJECT_SOURCE_DIR}/src
 )
