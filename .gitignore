@@ -1,3 +1,6 @@
+# Custom excluded directories and files
+build/ # exclude local build directory
+
 # Compiled Object files
 *.slo
 *.lo
