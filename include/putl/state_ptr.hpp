@@ -36,7 +36,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 	private:
 		/// \brief The number of bits reserved for the value of the state.
-		constexpr static size_t state_bits = detail::log2(alignof(T));
+		constexpr static size_t state_bits = detail::log2(alignof(T*));
 
 		/// \brief The number of bits reserved for the value of the pointer.
 		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
