@@ -52,10 +52,6 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		constexpr static uintptr_t ptr_mask   = ~state_mask;
 
 	public:
-		/// \brief Returns `true` if the given state is within valid bounds for the state.
-		///        This is associated to the reserved bits for the state value.
-		constexpr static bool is_valid_state(state_type) noexcept;
-
 		/// \brief Creates a state_ptr instance initialized by a null-pointer and a given state.
 		constexpr state_ptr(std::nullptr_t, state_type) noexcept;
 
@@ -92,8 +88,14 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		/// \brief Returns false if this state_ptr wraps nullptr, and returns true otherwise.
 		explicit operator bool() const noexcept;
 
-		template<typename X> friend bool operator==(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
-		template<typename X> friend bool operator!=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
+		template<typename X> friend bool operator==(state_ptr<X> const&, state_ptr<X> const&) noexcept;
+		template<typename X> friend bool operator!=(state_ptr<X> const&, state_ptr<X> const&) noexcept;
+
+		template<typename X> friend bool operator==(state_ptr<X> const&, nullptr_t) noexcept;
+		template<typename X> friend bool operator!=(state_ptr<X> const&, nullptr_t) noexcept;
+
+		template<typename X> friend bool operator==(nullptr_t, state_ptr<X> const&) noexcept;
+		template<typename X> friend bool operator!=(nullptr_t, state_ptr<X> const&) noexcept;
 
 		template<typename X> friend bool operator<(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
@@ -101,6 +103,10 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 	private:
+		/// \brief Returns `true` if the given state is within valid bounds for the state.
+		///        This is associated to the reserved bits for the state value.
+		constexpr static bool is_valid_state(state_type) noexcept;
+
 		/// \brief Asserts that the state of this state_ptr is within bounds.
 		void assert_invariant() const noexcept;
 
@@ -197,6 +203,28 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	auto operator!=(state_ptr<T> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs == rhs);
 	}
+
+
+	template<typename T>
+	bool operator==(state_ptr<T> const& rhs, nullptr_t) noexcept {
+		return rhs.get_ptr() == nullptr;
+	}
+
+	template<typename T>
+	bool operator!=(state_ptr<T> const& rhs, nullptr_t) noexcept {
+		return rhs.get_ptr() != nullptr;
+	}
+
+	template<typename T>
+	bool operator==(nullptr_t, state_ptr<T> const& lhs) noexcept {
+		return nullptr == lhs;
+	}
+
+	template<typename T>
+	bool operator!=(nullptr_t, state_ptr<T> const& lhs) noexcept {
+		return nullptr == lhs;
+	}
+
 
 	/// =======================================================================
 	///  Implementation of relational operators.
