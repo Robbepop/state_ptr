@@ -34,29 +34,62 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		using reference_type     = typename std::add_lvalue_reference<T>::type;
 		using state_type         = uintptr_t;
 
+	private:
+		/// \brief The number of bits reserved for the value of the state.
 		constexpr static size_t state_bits = detail::log2(alignof(T));
+
+		/// \brief The number of bits reserved for the value of the pointer.
 		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
+
+		/// \brief The maximum value that is possible to be stored as state
+		///        with the given amount of bits reserved for the value of the state.
 		constexpr static size_t threshold  = (1u << state_bits) - 1u;
 
+		/// \brief The bit-mask to extract the state value out of the shared memory.
+		constexpr static uintptr_t state_mask = (~0) >> ptr_bits;
+
+		/// \brief The bit-mask to extract the pointer value out of the shared memory.
+		constexpr static uintptr_t ptr_mask   = ~state_mask;
+
+	public:
+		/// \brief Returns `true` if the given state is within valid bounds for the state.
+		///        This is associated to the reserved bits for the state value.
 		constexpr static bool is_valid_state(state_type) noexcept;
 
+		/// \brief Creates a state_ptr instance initialized by a null-pointer and a given state.
 		constexpr state_ptr(std::nullptr_t, state_type) noexcept;
+
+		/// \brief Creates a state_ptr instance pointing to the given pointee and
+		///        initialized with the given state.
 		state_ptr(pointer_type ptr, state_type) noexcept;
 
+		/// \brief Copies the given state_ptr.
 		explicit state_ptr(state_ptr const& p) = default;
 
+		/// \brief Sets the state value of this state_ptr to the given value.
+		/// 
+		/// Note: This panicks if assertions are enabled whenever the given state
+		///       is out of bounds of the valid state space.
+		///       When assertions are disabled this has undefined behaviour in the 
+		///       error case.
 		void set_state(uintptr_t new_state) noexcept;
 
+		/// \brief Returns the current state of this state_ptr.
 		auto get_state() const noexcept -> uintptr_t;
 
+		/// \brief Returns the wrapped pointer of this state_ptr.
 		auto get_ptr() noexcept -> pointer_type;
 
+		/// \brief Returns the wrapped pointer of this state_ptr.
 		auto get_ptr() const noexcept -> const_pointer_type;
 
+		/// \brief Forwards to the wrapped pointer as reference.
 		auto operator*() const -> reference_type;
 
+		/// \brief Forwards to the wrapped pointer.
 		auto operator->() const noexcept -> pointer_type;
 
+		/// \brief Returns false if this state_ptr wraps nullptr, and returns true otherwise.
 		explicit operator bool() const noexcept;
 
 		template<typename X> friend bool operator==(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
@@ -68,6 +101,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		template<typename X> friend bool operator<=(state_ptr<X> const& lhs, state_ptr<X> const& rhs) noexcept;
 
 	private:
+		/// \brief Asserts that the state of this state_ptr is within bounds.
 		void assert_invariant() const noexcept;
 
 	private:
