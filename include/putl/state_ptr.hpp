@@ -55,10 +55,14 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 	public:
 		/// \brief Creates a state_ptr instance initialized by a null-pointer and a given state.
+		/// 
+		/// Panics if the given state is out of bounds of valid state.
 		constexpr state_ptr(std::nullptr_t, state_type) noexcept;
 
 		/// \brief Creates a state_ptr instance pointing to the given pointee and
 		///        initialized with the given state.
+		/// 
+		/// Panics if the given state is out of bounds of valid state.
 		state_ptr(pointer_type ptr, state_type) noexcept;
 
 		/// \brief Copies the given state_ptr.
