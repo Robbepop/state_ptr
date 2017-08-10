@@ -6,6 +6,28 @@ For example for arrays of element type `uint64_t` the three least significant bi
 
 This class provides a convenient way to use this otherwise wasted space to store information.
 
+## Release Notes
+
+### 0.2.0
+
+- Added comprehensive doxygen-ish documentation to all public parts of the library.
+- Improved the internal representation of the pointer and the state that no longer is based on bitfields.
+- It is now possible to use a user-defined type as state representable.
+- Users can (and should) set a state value limit on `state_ptr` instances.
+- Added constructors and comparisons for `nullptr_t`.
+- Added bool conversion overload.
+- Moved `state_ptr.hpp` from root directory to `include/putl/state_ptr.hpp` for more convenience.
+- Lots of code refactoring and clean-up.
+- Devel
+	- Made the project a proper CMake project.
+	- Added test suite for `state_ptr` and `log2`.
+
+### 0.1.0
+
+- Initial release.
+
+## Example
+
 ```c++
 using namespace putl;
 
