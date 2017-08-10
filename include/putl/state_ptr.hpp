@@ -26,6 +26,20 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		}
 	}
 
+	/// \brief A non-owning smart pointer that allows for storing an additional space-optimized
+	///        state along the pointer value that is dependend on the wrapped type's alignment.
+	/// 
+	/// Users can use custom state types (e.g. user-defined enums) as state type.
+	/// It is possible to further limit the representable state value, e.g. to adjust the state_ptr
+	/// to the state type dimensions. E.g. When there are just two possible states (enum Bit { set=0, unset=1, dontknow=2 };)
+	/// and the state_ptr for T allows for 3 state bits the user is still able to limit it to 2 bits.
+	/// 
+	/// Increasing the limit is not possible and will fail at compile-time!
+	/// 
+	/// The state_ptr interface is based on the interface that is provided by std::unique_ptr.
+	/// 
+	/// Note: It is planned to provide an implementation of an owning_state_ptr in the future.
+	/// 
 	template<typename T,
 	         typename S = uintptr_t,
 	         size_t req_state_bits = detail::log2(alignof(T))>
