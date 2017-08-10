@@ -26,14 +26,15 @@ endif()
 if(COMPILING_WITH_GNULIKE)
 	add_definitions(
 		-std=c++14
+		# -O0
 
-		-Wall
-		-Wextra
-		-Wpedantic
-		-Wconversion
-		-Wsign-conversion
+		# -Wall
+		# -Wextra
+		# -Wpedantic
+		# -Wconversion
+		# -Wsign-conversion
 
-		-pedantic-errors
+		# -pedantic-errors
 	)
 endif()
 

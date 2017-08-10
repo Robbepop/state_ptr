@@ -101,7 +101,12 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		state_ptr(pointer_type ptr, state_type) noexcept;
 
 		/// \brief Copies the given state_ptr.
-		explicit state_ptr(state_ptr const& p) = default;
+		explicit state_ptr(state_ptr const&) = default;
+		explicit state_ptr(state_ptr&&) = default;
+
+		state_ptr& operator=(state_ptr const&) noexcept = default;
+		state_ptr& operator=(state_ptr&&) noexcept = default;
+		// state_ptr& operator=(nullptr_t);
 
 		/// \brief Sets the state value of this state_ptr to the given value.
 		/// 
