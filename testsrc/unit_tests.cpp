@@ -47,6 +47,14 @@ TEST(StatePointer, InitializedAsNull) {
 	ASSERT_EQ(foo, nullptr);
 }
 
+TEST(StatePointer, GetStateNull) {
+	Foo* foo = new Foo;
+	state_ptr<Foo> p{foo, 0};
+	ASSERT_EQ(p.get_ptr(), foo);
+	ASSERT_EQ(p.get_state(), 0ul);
+	free(foo);
+}
+
 TEST(StatePointer, SetState) {
 	Foo foo;
 	state_ptr<Foo> p{&foo, 1};
