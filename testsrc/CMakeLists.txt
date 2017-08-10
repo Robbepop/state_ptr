@@ -1,5 +1,6 @@
 add_executable(unit_tests
-  unit_tests.cpp
+  log2_tests.cpp
+  state_ptr_tests.cpp
 )
 
 target_include_directories(unit_tests

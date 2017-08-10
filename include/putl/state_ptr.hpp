@@ -178,7 +178,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 	template<typename T, typename S, size_t StateBits>
 	void state_ptr<T, S, StateBits>::assert_valid_state(state_type state) noexcept {
-		return assert(is_valid_state(state));
+		return assert(is_valid_state(state) && "state value is out of bounds for this state_ptr");
 	}
 
 	template<typename T, typename S, size_t StateBits>
