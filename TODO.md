@@ -1,7 +1,6 @@
 ToDo List for Pointer Utils
 ===========================
 
-- Add a useful test suite via CMake.
 - Implement CI via travisCI (Linux & macOS) and appveyor (Windows).
-- Add comprehensive documentation for all API parts of the code.
-- Make the state of the `state_ptr` a template to allow for enums and other special types and better type safety on the user side.
+- Implement an owning version of the state_ptr, namely owning_state_ptr.
+- Maybe: Implement a specialization for T[] as std::unique_ptr does.
