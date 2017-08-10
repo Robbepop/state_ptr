@@ -17,6 +17,7 @@ target_include_directories(unit_tests
 )
 
 target_link_libraries(unit_tests gtest gtest_main)
+
 target_compile_options(unit_tests
 	PUBLIC
 		-O0             # disable optimizations as they screw testing
