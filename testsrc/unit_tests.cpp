@@ -13,6 +13,13 @@ struct Foo{
 	int a;
 };
 
+enum Bar {
+	A = 0,
+	B = 1,
+	C = 2,
+	D = 1337 // probably too large !
+};
+
 TEST(ConstexprLog2, Zero) {
 	EXPECT_EQ(detail::log2(0), 0);
 }
@@ -48,11 +55,10 @@ TEST(StatePointer, InitializedAsNull) {
 }
 
 TEST(StatePointer, GetStateNull) {
-	Foo* foo = new Foo;
-	state_ptr<Foo> p{foo, 0};
-	ASSERT_EQ(p.get_ptr(), foo);
+	Foo foo;
+	state_ptr<Foo> p{&foo, 0};
+	ASSERT_EQ(p.get_ptr(), &foo);
 	ASSERT_EQ(p.get_state(), 0ul);
-	free(foo);
 }
 
 TEST(StatePointer, SetState) {
@@ -63,6 +69,16 @@ TEST(StatePointer, SetState) {
 	p.set_state(2);
 	ASSERT_EQ(p.get_ptr(), &foo);
 	ASSERT_EQ(p.get_state(), 2ul);
+}
+
+TEST(StatePointer, EnumState) {
+	Foo foo;
+	state_ptr<Foo, Bar> p{&foo, Bar::A};
+	ASSERT_EQ(p.get_ptr(), &foo);
+	ASSERT_EQ(p.get_state(), Bar::A);
+	p.set_state(Bar::B);
+	ASSERT_EQ(p.get_ptr(), &foo);
+	ASSERT_EQ(p.get_state(), Bar::B);
 }
 
 } // namspace
