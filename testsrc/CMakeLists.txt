@@ -18,19 +18,21 @@ target_include_directories(unit_tests
 
 target_link_libraries(unit_tests gtest gtest_main)
 
-target_compile_options(unit_tests
-	PUBLIC
-		-O0             # disable optimizations as they screw testing
-		-fno-inline -O0 # ^--- see above
+if(COMPILING_WITH_GNULIKE)
+	target_compile_options(unit_tests
+		PUBLIC
+			-O0             # disable optimizations as they screw testing
+			-fno-inline -O0 # ^--- see above
 
-		-Wall
-		-Wextra
-		-Wpedantic
-		-Wconversion
-		-Wsign-conversion
+			-Wall
+			-Wextra
+			-Wpedantic
+			-Wconversion
+			-Wsign-conversion
 
-		-pedantic-errors # turns pedantic warnings into errors
-)
+			-pedantic-errors # turns pedantic warnings into errors
+	)
+endif()
 
 add_test(
 	NAME
