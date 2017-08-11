@@ -106,7 +106,7 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 		state_ptr& operator=(state_ptr const&) noexcept = default;
 		state_ptr& operator=(state_ptr&&) noexcept = default;
-		// state_ptr& operator=(nullptr_t);
+		// state_ptr& operator=(std::nullptr_t);
 
 		/// \brief Sets the state value of this state_ptr to the given value.
 		/// 
@@ -141,16 +141,16 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		friend bool operator!=(state_ptr<T1, S1, ReqStateBits> const&, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 
 		template<typename T1, typename S1, size_t ReqStateBits>
-		friend bool operator==(state_ptr<T1, S1, ReqStateBits> const&, nullptr_t) noexcept;
+		friend bool operator==(state_ptr<T1, S1, ReqStateBits> const&, std::nullptr_t) noexcept;
 		
 		template<typename T1, typename S1, size_t ReqStateBits>
-		friend bool operator!=(state_ptr<T1, S1, ReqStateBits> const&, nullptr_t) noexcept;
+		friend bool operator!=(state_ptr<T1, S1, ReqStateBits> const&, std::nullptr_t) noexcept;
 
 		template<typename T1, typename S1, size_t ReqStateBits>
-		friend bool operator==(nullptr_t, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
+		friend bool operator==(std::nullptr_t, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 		
 		template<typename T1, typename S1, size_t ReqStateBits>
-		friend bool operator!=(nullptr_t, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
+		friend bool operator!=(std::nullptr_t, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 
 		template<typename T1, typename S1, size_t ReqStateBits>
 		friend bool operator<(state_ptr<T1, S1, ReqStateBits> const& lhs, state_ptr<T1, S1, ReqStateBits> const& rhs) noexcept;
@@ -288,22 +288,22 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	}
 
 	template<typename T, typename S, size_t StateBits>
-	bool operator==(state_ptr<T, S, StateBits> const& rhs, nullptr_t) noexcept {
+	bool operator==(state_ptr<T, S, StateBits> const& rhs, std::nullptr_t) noexcept {
 		return rhs.get_ptr() == nullptr;
 	}
 
 	template<typename T, typename S, size_t StateBits>
-	bool operator!=(state_ptr<T, S, StateBits> const& rhs, nullptr_t) noexcept {
+	bool operator!=(state_ptr<T, S, StateBits> const& rhs, std::nullptr_t) noexcept {
 		return rhs.get_ptr() != nullptr;
 	}
 
 	template<typename T, typename S, size_t StateBits>
-	bool operator==(nullptr_t, state_ptr<T, S, StateBits> const& lhs) noexcept {
+	bool operator==(std::nullptr_t, state_ptr<T, S, StateBits> const& lhs) noexcept {
 		return nullptr == lhs;
 	}
 
 	template<typename T, typename S, size_t StateBits>
-	bool operator!=(nullptr_t, state_ptr<T, S, StateBits> const& lhs) noexcept {
+	bool operator!=(std::nullptr_t, state_ptr<T, S, StateBits> const& lhs) noexcept {
 		return nullptr == lhs;
 	}
 
