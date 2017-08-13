@@ -1,0 +1,39 @@
+image: Visual Studio 2017
+
+init:
+  - git config --global core.autocrlf input
+
+clone_folder: C:\projects\repos\state_ptr
+
+platform:
+  - x64
+  - x86
+
+environment:
+  global:
+    REPO_DIR: C:\projects\repos
+    INSTALLATION_DIR: C:\projects\installation
+
+configuration:
+  # The CMake setup does not afford testing in Release mode yet
+  # - Release
+  - Debug
+
+build_script:
+  - IF "%PLATFORM%" == "x64" ( SET CMAKE_GENERATOR="Visual Studio 15 2017 Win64")
+  - IF "%PLATFORM%" == "x86" ( SET CMAKE_GENERATOR="Visual Studio 15 2017")
+
+  # Build and test state_ptr
+  - cd %REPO_DIR%\state_ptr
+  - git submodule init
+  - git submodule update
+  - mkdir ..\build
+  - cd ..\build
+  - cmake -G %CMAKE_GENERATOR% -DCMAKE_INSTALL_PREFIX=%INSTALLATION_DIR%  ..\state_ptr
+  - cmake --build . --config %CONFIGURATION%
+  - ctest -V -C %CONFIGURATION%
+
+build:
+  verbosity: minimal
+
+test: off
