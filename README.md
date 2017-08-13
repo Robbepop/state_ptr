@@ -1,4 +1,9 @@
 # state_ptr
+
+|    Linux & macOS    |       Windows       |
+|:-------------------:|:-------------------:|
+| [![travisCI][1]][2] | [![appveyor][3]][4] |
+
 A C++ pointer type with storage space for information filling.
 
 Because of data alignment pointers that are used to iterate over arrays of data have states that cannot be reached.
@@ -65,3 +70,10 @@ p.set_state(static_cast<Bar>(42)); /* !! panic !! */
 ```
 
 I hope this small pointer utility library is useful to you.
+
+
+
+[1]: https://travis-ci.org/Robbepop/state_ptr.svg?branch=master
+[2]: https://travis-ci.org/Robbepop/state_ptr
+[3]: https://ci.appveyor.com/api/projects/status/1vku12gp7ytjn5yo?svg=true
+[4]: https://ci.appveyor.com/project/Robbepop/state-ptr/branch/master
