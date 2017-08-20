@@ -42,8 +42,8 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	/// Note: It is planned to provide an implementation of an owning_state_ptr in the future.
 	/// 
 	template<typename T,
-	         typename S = uintptr_t,
-	         size_t req_state_bits = detail::log2(alignof(T))>
+	         typename S = std::uintptr_t,
+	         std::size_t req_state_bits = detail::log2(alignof(T))>
 	class state_ptr {
 	public:
 		/// \brief The element type.
@@ -67,20 +67,20 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		using state_type = S;
 
 		/// \brief The type used internally to store the pointer and the state.
-		using internal_type = uintptr_t;
+		using internal_type = std::uintptr_t;
 
 	private:
 		/// \brief The maximum number of bits that can be reserved to represent
 		///        the state depending on the alignment of the element type.
-		constexpr static size_t state_bits_max = detail::log2(alignof(T));
+		constexpr static std::size_t state_bits_max = detail::log2(alignof(T));
 
 		/// \brief The number of bits reserved for the value of the state.
-		constexpr static size_t state_bits     = std::min(req_state_bits, state_bits_max);
+		constexpr static std::size_t state_bits = std::min(req_state_bits, state_bits_max);
 		static_assert(req_state_bits <= state_bits_max, "The alignment of T is not sufficient to store the requested amount of state bits.");
 		// static_assert(state_bits > 0, "The alignment of T is not sufficient to store an additional state.");
 
 		/// \brief The number of bits reserved for the value of the pointer.
-		constexpr static size_t ptr_bits   = 8 * sizeof(pointer_type) - state_bits;
+		constexpr static std::size_t ptr_bits = 8 * sizeof(pointer_type) - state_bits;
 
 		/// \brief The maximum value that is possible to be stored as state
 		///        with the given amount of bits reserved for the value of the state.
@@ -144,34 +144,34 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		/// \brief Returns false if this state_ptr wraps nullptr, and returns true otherwise.
 		explicit operator bool() const noexcept;
 
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator==(state_ptr<T1, S1, ReqStateBits> const&, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 		
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator!=(state_ptr<T1, S1, ReqStateBits> const&, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator==(state_ptr<T1, S1, ReqStateBits> const&, std::nullptr_t) noexcept;
 		
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator!=(state_ptr<T1, S1, ReqStateBits> const&, std::nullptr_t) noexcept;
 
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator==(std::nullptr_t, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 		
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator!=(std::nullptr_t, state_ptr<T1, S1, ReqStateBits> const&) noexcept;
 
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator<(state_ptr<T1, S1, ReqStateBits> const& lhs, state_ptr<T1, S1, ReqStateBits> const& rhs) noexcept;
 		
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator<=(state_ptr<T1, S1, ReqStateBits> const& lhs, state_ptr<T1, S1, ReqStateBits> const& rhs) noexcept;
 		
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator> (state_ptr<T1, S1, ReqStateBits> const& lhs, state_ptr<T1, S1, ReqStateBits> const& rhs) noexcept;
 		
-		template<typename T1, typename S1, size_t ReqStateBits>
+		template<typename T1, typename S1, std::size_t ReqStateBits>
 		friend bool operator<=(state_ptr<T1, S1, ReqStateBits> const& lhs, state_ptr<T1, S1, ReqStateBits> const& rhs) noexcept;
 
 
@@ -200,17 +200,17 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	///  Implementation of constructors and member functions.
 	/// =======================================================================
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	constexpr bool state_ptr<T, S, StateBits>::is_valid_state(state_type state) noexcept {
 		return static_cast<internal_type>(state) <= state_max;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	void state_ptr<T, S, StateBits>::assert_valid_state(state_type state) noexcept {
 		return assert(is_valid_state(state) && "state value is out of bounds for this state_ptr");
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	constexpr state_ptr<T, S, StateBits>::state_ptr(
 		std::nullptr_t,
 		state_type state
@@ -221,54 +221,54 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		set_state(state);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	state_ptr<T, S, StateBits>::state_ptr(
 		pointer_type ptr,
 		state_type   state
 	) noexcept :
-		m_ptr_and_state{reinterpret_cast<uintptr_t>(ptr)}
+		m_ptr_and_state{reinterpret_cast<internal_type>(ptr)}
 	{
 		assert_valid_state(state);
 		set_state(state);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	constexpr auto state_ptr<T, S, StateBits>::get_ptr_bits() const noexcept -> internal_type {
 		return m_ptr_and_state & ptr_mask;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	constexpr auto state_ptr<T, S, StateBits>::get_state_bits() const noexcept -> internal_type {
 		return m_ptr_and_state & state_mask;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	void state_ptr<T, S, StateBits>::assert_invariant() const noexcept {
 		assert_valid_state(get_state());
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	void state_ptr<T, S, StateBits>::set_state(state_type new_state) noexcept {
 		assert_valid_state(new_state);
 		m_ptr_and_state = get_ptr_bits() | static_cast<internal_type>(new_state);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::get_state() const noexcept -> state_type {
 		return static_cast<state_type>(get_state_bits());
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::get_ptr() noexcept -> pointer_type {
 		return reinterpret_cast<pointer_type>(get_ptr_bits());
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::get_ptr() const noexcept -> const_pointer_type {
 		return reinterpret_cast<const_pointer_type>(get_ptr_bits());
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::operator*() const noexcept -> const_reference_type {
 		// TODO: Someone should validate if this really takes the intended reference.
 		//       Tests don't fail so at least it compiles now.
@@ -276,23 +276,23 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		return reinterpret_cast<const_reference_type>(*get_ptr());
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::operator*() noexcept -> reference_type {
 		// TODO: Code smell. See const version of this operator overload for more information.
 		return reinterpret_cast<reference_type>(*get_ptr());
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::operator->() const noexcept -> const_pointer_type {
 		return get_ptr();
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::operator->() noexcept -> pointer_type {
 		return get_ptr();
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	state_ptr<T, S, StateBits>::operator bool() const noexcept {
 		return get_ptr() != nullptr;
 	}
@@ -301,32 +301,32 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	///  Implementation of comparison operators.
 	/// =======================================================================
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto operator==(state_ptr<T, S, StateBits> const& rhs, state_ptr<T, S, StateBits> const& lhs) noexcept -> bool {
 		return lhs.m_ptr_and_state == rhs.m_ptr_and_state;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto operator!=(state_ptr<T, S, StateBits> const& rhs, state_ptr<T, S, StateBits> const& lhs) noexcept -> bool {
 		return !(lhs == rhs);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	bool operator==(state_ptr<T, S, StateBits> const& rhs, std::nullptr_t) noexcept {
 		return rhs.get_ptr() == nullptr;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	bool operator!=(state_ptr<T, S, StateBits> const& rhs, std::nullptr_t) noexcept {
 		return rhs.get_ptr() != nullptr;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	bool operator==(std::nullptr_t, state_ptr<T, S, StateBits> const& lhs) noexcept {
 		return nullptr == lhs;
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	bool operator!=(std::nullptr_t, state_ptr<T, S, StateBits> const& lhs) noexcept {
 		return nullptr == lhs;
 	}
@@ -335,22 +335,22 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 	///  Implementation of relational operators.
 	/// =======================================================================
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto operator<(state_ptr<T, S, StateBits> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs.m_ptr < rhs.m_ptr);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto operator<=(state_ptr<T, S, StateBits> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs > rhs);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto operator>=(state_ptr<T, S, StateBits> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs < rhs);
 	}
 
-	template<typename T, typename S, size_t StateBits>
+	template<typename T, typename S, std::size_t StateBits>
 	auto operator>(state_ptr<T, S, StateBits> const& rhs, state_ptr<T> const& lhs) noexcept -> bool {
 		return !(lhs <= rhs);
 	}
