@@ -13,6 +13,13 @@ This class provides a convenient way to use this otherwise wasted space to store
 
 ## Release Notes
 
+### 0.3.0
+
+- Fixed critical compile-time bug in `operator*` implementation. (Thanks goes to fkutzner)
+- Overloads for `operator*` and `operator->` respect const now
+- Internal code clean-up (thanks clang-tidy!)
+- Added some new unit tests for `state_ptr`.
+
 ### 0.2.0
 
 - Added comprehensive doxygen-ish documentation to all public parts of the library.
