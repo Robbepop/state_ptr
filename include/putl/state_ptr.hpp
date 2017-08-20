@@ -1,6 +1,7 @@
 #ifndef POINTER_UTILS_STATE_PTR_HPP
 #define POINTER_UTILS_STATE_PTR_HPP
 
+#include <cstdint>
 #include <cassert>
 #include <memory>
 
