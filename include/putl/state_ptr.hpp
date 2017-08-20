@@ -270,16 +270,12 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::operator*() const noexcept -> const_reference_type {
-		// TODO: Someone should validate if this really takes the intended reference.
-		//       Tests don't fail so at least it compiles now.
-		//       Regression of GitHub issue #4.
-		return reinterpret_cast<const_reference_type>(*get_ptr());
+		return *get_ptr();
 	}
 
 	template<typename T, typename S, std::size_t StateBits>
 	auto state_ptr<T, S, StateBits>::operator*() noexcept -> reference_type {
-		// TODO: Code smell. See const version of this operator overload for more information.
-		return reinterpret_cast<reference_type>(*get_ptr());
+		return *get_ptr();
 	}
 
 	template<typename T, typename S, std::size_t StateBits>
