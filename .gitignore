@@ -1,5 +1,5 @@
 # Custom excluded directories and files
-build/
+build*/
 
 # Compiled Object files
 *.slo
