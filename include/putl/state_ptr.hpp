@@ -129,10 +129,16 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		auto get_ptr() const noexcept -> const_pointer_type;
 
 		/// \brief Forwards to the wrapped pointer as reference.
-		auto operator*() const -> reference_type;
+		auto operator*() noexcept -> reference_type;
+
+		/// \brief Forwards to the wrapped pointer as const reference.
+		auto operator*() const noexcept -> const_reference_type;
 
 		/// \brief Forwards to the wrapped pointer.
-		auto operator->() const noexcept -> pointer_type;
+		auto operator->() noexcept -> pointer_type;
+
+		/// \brief Forwards to the wrapped const pointer.
+		auto operator->() const noexcept -> const_pointer_type;
 
 		/// \brief Returns false if this state_ptr wraps nullptr, and returns true otherwise.
 		explicit operator bool() const noexcept;
@@ -258,16 +264,30 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 
 	template<typename T, typename S, size_t StateBits>
 	auto state_ptr<T, S, StateBits>::get_ptr() const noexcept -> const_pointer_type {
-		return reinterpret_cast<pointer_type>(get_ptr_bits());
+		return reinterpret_cast<const_pointer_type>(get_ptr_bits());
 	}
 
 	template<typename T, typename S, size_t StateBits>
-	auto state_ptr<T, S, StateBits>::operator*() const -> reference_type {
-		return reinterpret_cast<reference_type>(get_ptr());
+	auto state_ptr<T, S, StateBits>::operator*() const noexcept -> const_reference_type {
+		// TODO: Someone should validate if this really takes the intended reference.
+		//       Tests don't fail so at least it compiles now.
+		//       Regression of GitHub issue #4.
+		return reinterpret_cast<const_reference_type>(*get_ptr());
 	}
 
 	template<typename T, typename S, size_t StateBits>
-	auto state_ptr<T, S, StateBits>::operator->() const noexcept -> pointer_type {
+	auto state_ptr<T, S, StateBits>::operator*() noexcept -> reference_type {
+		// TODO: Code smell. See const version of this operator overload for more information.
+		return reinterpret_cast<reference_type>(*get_ptr());
+	}
+
+	template<typename T, typename S, size_t StateBits>
+	auto state_ptr<T, S, StateBits>::operator->() const noexcept -> const_pointer_type {
+		return get_ptr();
+	}
+
+	template<typename T, typename S, size_t StateBits>
+	auto state_ptr<T, S, StateBits>::operator->() noexcept -> pointer_type {
 		return get_ptr();
 	}
 
