@@ -48,22 +48,25 @@ namespace UTILS_STATE_PTR_HPP_NAMESPACE {
 		/// \brief The element type.
 		/// 
 		/// The element type is the type that this state pointer points to.
-		using element_type       = T;
+		using element_type = T;
 
 		/// \brief Type representing a pointer to an element type.
-		using pointer_type       = T*;
+		using pointer_type = typename std::add_pointer<T>::type;
 
-		/// \brief Type representing a pointer to a const element type.
-		using const_pointer_type = T const*;
+		/// \brief Type representing a pointer to a constant element type.
+		using const_pointer_type = typename std::add_pointer<typename std::add_const<T>::type>::type;
 
 		/// \brief Type representing a reference to the element type.
-		using reference_type     = typename std::add_lvalue_reference<T>::type;
+		using reference_type = typename std::add_lvalue_reference<T>::type;
+
+		/// \brief Type representing a reference to a constant element type.
+		using const_reference_type = typename std::add_lvalue_reference<typename std::add_const<T>::type>::type;
 
 		/// \brief The user defined type used to represent the state.
-		using state_type         = S;
+		using state_type = S;
 
 		/// \brief The type used internally to store the pointer and the state.
-		using internal_type      = uintptr_t;
+		using internal_type = uintptr_t;
 
 	private:
 		/// \brief The maximum number of bits that can be reserved to represent
